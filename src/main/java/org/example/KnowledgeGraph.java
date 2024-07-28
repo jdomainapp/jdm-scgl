@@ -7,9 +7,9 @@ import java.util.List;
 
 public class KnowledgeGraph {
     private static Driver driver = null;
-    private static String URI = "bolt://localhost:7687";
+    private static String URI = "neo4j+s://9336e8e4.databases.neo4j.io";
     private static String USER = "neo4j";
-    private static String PASSWORD = "adminadmin";
+    private static String PASSWORD = "Y2x8MhqmdQV7qe7cz2ON_0rc8M7noF7ZNiRppaxfds8";
 
     public static void init() {
         driver = GraphDatabase.driver(URI, AuthTokens.basic(USER, PASSWORD));

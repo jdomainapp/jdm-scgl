@@ -17,12 +17,12 @@ public class Main {
 
         try {
             List<Record> classNodes = KnowledgeGraph.query("MATCH (classNode:CLASS) RETURN classNode");
-
             for (Record record : classNodes) {
-                Node classNode = record.get("classNode").asNode();
-                ClassModel model = ClassModel.nodeToModel(classNode);
-                model.generate(originalJdaDirectory, projectDirectory);
+               Node classNode = record.get("classNode").asNode();
+               ClassModel model = ClassModel.nodeToModel(classNode);
+               model.generate(originalJdaDirectory, projectDirectory);
             }
+            System.out.printf("Generation complete. View your output at %s%n", projectDirectory);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

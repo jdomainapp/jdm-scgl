@@ -14,22 +14,22 @@ CREATE
 (propertyDesc:ANNOTATION_TYPE { name: "PropertyDesc" }),
 
 // Software files that are not generated.
-(sccCourseManDerby:CLASS {name: "SCCCourseManDerby", packageName: "software.config", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\software\config\SCCCourseManDerby.java"}),
-(sccCourseManDerbyBackEnd:CLASS {name: "SCCCourseManDerbyBackEnd", packageName: "software.config", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\software\config\SCCCourseManDerbyBackEnd.java"}),
-(coursemanRfsGen:CLASS {name: "CourseManRFSGen", packageName: "software", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\software\CourseManRFSGen.java"}),
-(coursemanRfsGenRun:CLASS {name: "CourseManRFSGenRun", packageName: "software", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\software\CourseManRFSGenRun.java"}),
-(coursemanRfsRun:CLASS {name: "CourseManRFSRun", packageName: "software", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\software\CourseManRFSRun.java"}),
-(coursemanRfsRunBE:CLASS {name: "CourseManRFSRunBE", packageName: "software", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\software\CourseManRFSRunBE.java"}),
+(sccCourseManDerby:CLASS {name: "SCCCourseManDerby", packageName: "software.config", sourceFilePath: "software\config\SCCCourseManDerby.java"}),
+(sccCourseManDerbyBackEnd:CLASS {name: "SCCCourseManDerbyBackEnd", packageName: "software.config", sourceFilePath: "software\config\SCCCourseManDerbyBackEnd.java"}),
+(coursemanRfsGen:CLASS {name: "CourseManRFSGen", packageName: "software", sourceFilePath: "software\CourseManRFSGen.java"}),
+(coursemanRfsGenRun:CLASS {name: "CourseManRFSGenRun", packageName: "software", sourceFilePath: "software\CourseManRFSGenRun.java"}),
+(coursemanRfsRun:CLASS {name: "CourseManRFSRun", packageName: "software", sourceFilePath: "software\CourseManRFSRun.java"}),
+(coursemanRfsRunBE:CLASS {name: "CourseManRFSRunBE", packageName: "software", sourceFilePath: "software\CourseManRFSRunBE.java"}),
 
 // Domain classes.
-(address:CLASS { name: "Address", packageName: "modules.address.model", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\modules\address\model\Address.java" }),
-(courseModule:CLASS { name: "CourseModule", packageName: "modules.coursemodule.model", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\modules\coursemodule\model\CourseModule.java" }),
-(compulsoryModule:CLASS { name: "CompulsoryModule", packageName: "modules.coursemodule.model", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\modules\coursemodule\model\CompulsoryModule.java" }),
-(electiveModule:CLASS { name: "ElectiveModule", packageName: "modules.coursemodule.model", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\modules\coursemodule\model\ElectiveModule.java" }),
-(enrolment:CLASS { name: "Enrolment", packageName: "modules.enrolment.model", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\modules\enrolment\model\Enrolment.java" }),
-(student:CLASS { name: "Student", packageName: "modules.student.model", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\modules\student\model\Student.java" }),
-(gender:CLASS { name: "Gender", packageName: "modules.student.model", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\modules\student\model\Gender.java" }),
-(studentClass:CLASS { name: "StudentClass", packageName: "modules.studentclass.model", sourceFilePath: "\examples\courseman\mosar\src\main\java\org\jda\example\coursemanrestful\modules\studentclass\model\StudentClass.java" }),
+(address:CLASS { name: "Address", packageName: "modules.address.model", sourceFilePath: "modules\address\model\Address.java" }),
+(courseModule:CLASS { name: "CourseModule", packageName: "modules.coursemodule.model", sourceFilePath: "modules\coursemodule\model\CourseModule.java" }),
+(compulsoryModule:CLASS { name: "CompulsoryModule", packageName: "modules.coursemodule.model", sourceFilePath: "modules\coursemodule\model\CompulsoryModule.java" }),
+(electiveModule:CLASS { name: "ElectiveModule", packageName: "modules.coursemodule.model", sourceFilePath: "modules\coursemodule\model\ElectiveModule.java" }),
+(enrolment:CLASS { name: "Enrolment", packageName: "modules.enrolment.model", sourceFilePath: "modules\enrolment\model\Enrolment.java" }),
+(student:CLASS { name: "Student", packageName: "modules.student.model", sourceFilePath: "modules\student\model\Student.java" }),
+(gender:CLASS { name: "Gender", packageName: "modules.student.model", sourceFilePath: "modules\student\model\Gender.java" }),
+(studentClass:CLASS { name: "StudentClass", packageName: "modules.studentclass.model", sourceFilePath: "modules\studentclass\model\StudentClass.java" }),
 
 // Main SCC class.
 (sccCourseManClass:CLASS { name: "SCCCourseMan", packageName: "software.config" }),
