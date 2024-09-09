@@ -6,68 +6,52 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class DAttrModel extends AnnotationModel {
+public class DAssocModel extends AnnotationModel {
     private static final List<String> defaultImports = List.of(new String[] {
-        "jda.modules.dcsl.syntax.DAttr",
-        "jda.modules.dcsl.syntax.DAttr.Type",
+        "jda.modules.dcsl.syntax.DAssoc",
+        "jda.modules.dcsl.syntax.DAssoc.AssocEndType",
+        "jda.modules.dcsl.syntax.DAssoc.AssocType",
+        "jda.modules.dcsl.syntax.DAssoc.Associate",
     });
 
-    private String name;
-    private String type;
-    private String mutable;
-    private String optional;
-    private String id;
-    private String auto;
-    private String length;
+    private String ascName;
+    private String role;
+    private String ascType;
+    private String endType;
 
-    public static DAttrModel nodeToModel(Node node) {
+    public static DAssocModel nodeToModel(Node node) {
         Map<String, Object> nodeProperties = node.asMap();
 
-        DAttrModel model = new DAttrModel();
-        model.name = nodeProperties.getOrDefault("name", "").toString();
-        model.type = nodeProperties.getOrDefault("type", "").toString();
-        model.mutable = nodeProperties.getOrDefault("mutable", "true").toString();
-        model.optional = nodeProperties.getOrDefault("optional", "false").toString();
-        model.id = nodeProperties.getOrDefault("id", "false").toString();
-        model.auto = nodeProperties.getOrDefault("auto", "false").toString();
-        model.length = nodeProperties.getOrDefault("length", "false").toString();
+        DAssocModel model = new DAssocModel();
+        model.ascName = nodeProperties.getOrDefault("ascName", "").toString();
+        model.role = nodeProperties.getOrDefault("role", "").toString();
+        model.ascType = nodeProperties.getOrDefault("ascType", "").toString();
+        model.endType = nodeProperties.getOrDefault("endType", "").toString();
 
         model.imports = new HashSet<>(defaultImports);
 
         return model;
     }
 
-    public String getName() {
-        return name;
+    public String getAscName() {
+        return ascName;
     }
 
-    public String getId() {
-        return id;
+    public String getRole() {
+        return role;
     }
 
-    public String getType() {
-        return type;
+    public String getAscType() {
+        return ascType;
     }
 
-    public String getMutable() {
-        return mutable;
-    }
-
-    public String getOptional() {
-        return optional;
-    }
-
-    public String getAuto() {
-        return auto;
-    }
-
-    public String getLength() {
-        return length;
+    public String getEndType() {
+        return endType;
     }
 
     @Override
     public String getTemplateName() {
-        return "templates/DAttr.ftlh";
+        return "templates/DAssoc.ftlh";
     }
 
 }

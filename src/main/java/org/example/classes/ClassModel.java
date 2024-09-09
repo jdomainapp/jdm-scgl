@@ -26,6 +26,8 @@ public class ClassModel {
     private ArrayList<String> extendsList;
     private ArrayList<String> annotations;
     private ArrayList<String> attributes;
+    private ArrayList<String> methods;
+    private ArrayList<String> implementsList;
 
     public String getClassName() {
         return className;
@@ -46,6 +48,9 @@ public class ClassModel {
     public ArrayList<String> getExtendsList() {
         return extendsList;
     }
+    public ArrayList<String> getImplementsList() {
+        return implementsList;
+    }
 
     public ArrayList<String> getAnnotations() {
         return annotations;
@@ -53,6 +58,10 @@ public class ClassModel {
 
     public ArrayList<String> getAttributes() {
         return attributes;
+    }
+
+    public ArrayList<String> getMethods() {
+        return methods;
     }
 
     public static ClassModel nodeToModel(Node node) {
@@ -65,10 +74,13 @@ public class ClassModel {
         classModel.imports = new HashSet<>();
 
         ArrayList<String> extendsList = new ArrayList<>();
+        ArrayList<String> implementsList = new ArrayList<>();
         ArrayList<String> annotations = new ArrayList<>();
         ArrayList<String> attributes = new ArrayList<>();
+        ArrayList<String> methods = new ArrayList<>();
 
         try {
+            // extends
             List<Record> extendNodes = KnowledgeGraph.query(String.format("MATCH (:CLASS {name: \"%s\"})-[:EXTENDS]->(n:CLASS) RETURN n", classModel.getClassName()));
             extendNodes.forEach(r -> {
                 Node extendNode = r.get("n").asNode();
@@ -79,6 +91,18 @@ public class ClassModel {
                 classModel.imports.add(basePackage + "." + packageName + "." + name);
             });
 
+            // implements
+            List<Record> implementsNodes = KnowledgeGraph.query(String.format("MATCH (:CLASS {name: \"%s\"})-[:IMPLEMENTS]->(n:INTERFACE) RETURN n", classModel.getClassName()));
+            implementsNodes.forEach(r -> {
+                Node implementNode = r.get("n").asNode();
+                String name = implementNode.get("name").asString();
+                String packageName = implementNode.get("packageName").asString();
+
+                implementsList.add(name);
+                classModel.imports.add(basePackage + "." + packageName + "." + name);
+            });
+
+            // annotations
             List<Record> annotationNodes = KnowledgeGraph.query(String.format("MATCH (:CLASS {name: \"%s\"})<-[:ATTACH_TO]-(a:ANNOTATION)-[:INSTANCE_OF]->(aType:ANNOTATION_TYPE) return a, aType.name", classModel.getClassName()));
             for (Record r : annotationNodes) {
                 Node annotationNode = r.get("a").asNode();
@@ -91,20 +115,26 @@ public class ClassModel {
                 }
             }
 
-            List<Record> attributeNodes = KnowledgeGraph.query(String.format("MATCH (:CLASS {name: \"%s\"})-[:HAS_ATTRIBUTE]->(attribute:ATTRIBUTE) RETURN attribute", classModel.getClassName()));
+            // attributes
+            List<Record> attributeNodes = KnowledgeGraph.query(String.format("MATCH (n:CLASS)-[:HAS_ATTRIBUTE]->(attribute:ATTRIBUTE) WHERE ID(n)=%s RETURN attribute", node.id()));
             for (Record r : attributeNodes) {
                 Node attributeNode = r.get("attribute").asNode();
                 AttributeModel model = new AttributeModel(attributeNode);
                 classModel.imports.addAll(model.getImports());
                 attributes.add(model.bind());
             }
+
+            // methods
+
         } catch (NullPointerException | IOException e) {
             e.printStackTrace();
         }
 
         classModel.extendsList = extendsList;
+        classModel.implementsList = implementsList;
         classModel.annotations = annotations;
         classModel.attributes = attributes;
+        classModel.methods = methods;
 
         return classModel;
     }

@@ -13,7 +13,9 @@ import jda.modules.mccl.syntax.view.ViewDesc;
     name = "ModuleAddress",
     modelDesc = @ModelDesc(model = Address.class),
     viewDesc = @ViewDesc(formTitle = "Form: Address", imageIcon = "Address.png", domainClassLabel = "Address", view = jda.mosa.view.View.class),
-    controllerDesc = @jda.modules.mccl.syntax.controller.ControllerDesc())
+    controllerDesc = @jda.modules.mccl.syntax.controller.ControllerDesc(),
+    tree = ""
+)
 public class ModuleAddress {
 
     @AttributeDesc(label = "Form: Address")

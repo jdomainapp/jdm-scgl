@@ -36,6 +36,15 @@ public abstract class AnnotationModel {
             case "Select" -> Select.nodeToModel(node);
             case "JSValidation" -> JSValidation.nodeToModel(node);
             case "PropertyDesc" -> PropertyDesc.nodeToModel(node);
+            /* dennis */
+            case "DClass" -> DClassModel.nodeToModel(node);
+            case "DAttr" -> DAttrModel.nodeToModel(node);
+            case "DAssoc" -> DAssocModel.nodeToModel(node);
+            // ctree
+            case "CTree" -> CTreeModel.nodeToModel(node);
+            case "CEdge" -> CEdgeModel.nodeToModel(node);
+            case "ScopeDesc" -> ScopeDescModel.nodeToModel(node);
+
             default -> null;
         };
     }

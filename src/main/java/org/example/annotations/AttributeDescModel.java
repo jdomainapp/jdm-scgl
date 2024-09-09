@@ -35,22 +35,33 @@ public class AttributeDescModel extends AnnotationModel {
     private boolean loadOidWithBoundValue;
     private String inputType;
     private String jsValidation;
+    private String editable;
 
     public static AttributeDescModel nodeToModel(Node node) {
         Map<String, Object> nodeProperties = node.asMap();
         String nodeId = node.elementId();
 
         AttributeDescModel model = new AttributeDescModel();
-        model.id = nodeProperties.getOrDefault("id", "␀").toString();
+        model.id = nodeProperties.getOrDefault("id", "").toString();
+//        model.label = nodeProperties.getOrDefault("label", "").toString();
+//        model.type = nodeProperties.getOrDefault("type", "Null").toString();
+//        model.width = Integer.parseInt(nodeProperties.getOrDefault("width", "-1").toString());
+//        model.height = Integer.parseInt(nodeProperties.getOrDefault("height", "-1").toString());
+//        model.alignX = nodeProperties.getOrDefault("alignX", "AlignmentX.Left").toString();
+//        model.isStateEventSource = Boolean.parseBoolean(nodeProperties.getOrDefault("isStateEventSource", "false").toString());
+//        model.displayOidWithBoundValue = Boolean.parseBoolean(nodeProperties.getOrDefault("displayOidWithBoundValue", "false").toString());
+//        model.loadOidWithBoundValue = Boolean.parseBoolean(nodeProperties.getOrDefault("loadOidWithBoundValue", "false").toString());
+//        model.inputType = nodeProperties.getOrDefault("inputType", "InputTypes.Undefined").toString();
         model.label = nodeProperties.getOrDefault("label", "").toString();
-        model.type = nodeProperties.getOrDefault("type", "Null").toString();
+        model.type = nodeProperties.getOrDefault("type", "").toString();
         model.width = Integer.parseInt(nodeProperties.getOrDefault("width", "-1").toString());
         model.height = Integer.parseInt(nodeProperties.getOrDefault("height", "-1").toString());
-        model.alignX = nodeProperties.getOrDefault("alignX", "AlignmentX.Left").toString();
-        model.isStateEventSource = Boolean.parseBoolean(nodeProperties.getOrDefault("isStateEventSource", "false").toString());
-        model.displayOidWithBoundValue = Boolean.parseBoolean(nodeProperties.getOrDefault("displayOidWithBoundValue", "false").toString());
-        model.loadOidWithBoundValue = Boolean.parseBoolean(nodeProperties.getOrDefault("loadOidWithBoundValue", "false").toString());
-        model.inputType = nodeProperties.getOrDefault("inputType", "InputTypes.Undefined").toString();
+        model.alignX = nodeProperties.getOrDefault("alignX", "").toString();
+        model.isStateEventSource = Boolean.parseBoolean(nodeProperties.getOrDefault("isStateEventSource", "").toString());
+        model.displayOidWithBoundValue = Boolean.parseBoolean(nodeProperties.getOrDefault("displayOidWithBoundValue", "").toString());
+        model.loadOidWithBoundValue = Boolean.parseBoolean(nodeProperties.getOrDefault("loadOidWithBoundValue", "").toString());
+        model.inputType = nodeProperties.getOrDefault("inputType", "").toString();
+        model.editable = nodeProperties.getOrDefault("editable", "").toString();
         model.imports = new HashSet<>(defaultImports);
 
         try {
@@ -60,9 +71,10 @@ public class AttributeDescModel extends AnnotationModel {
                 Select select = Select.nodeToModel(selectNode);
                 model.ref = select.generate();
                 model.imports.addAll(select.getImports());
-            } else {
-                model.ref = "@Select()";
             }
+//            else {
+//                model.ref = "@Select()";
+//            }
 
             results = KnowledgeGraph.query(String.format("MATCH (attrDesc:ANNOTATION)-[:HAS_CONTROLLER]->(controllerAnnotation:ANNOTATION)-[:INSTANCE_OF]->(:ANNOTATION_TYPE { name: \"ControllerDesc\" }) WHERE elementId(attrDesc) = \"%s\" RETURN controllerAnnotation", nodeId));
             if (!results.isEmpty()) {
@@ -70,9 +82,10 @@ public class AttributeDescModel extends AnnotationModel {
                 ControllerDescModel controller = ControllerDescModel.nodeToModel(controllerNode);
                 model.controllerDesc = controller.generate();
                 model.imports.addAll(controller.getImports());
-            } else {
-                model.controllerDesc = "@ControllerDesc()";
             }
+//            else {
+//                model.controllerDesc = "@ControllerDesc()";
+//            }
 
             results = KnowledgeGraph.query(String.format("MATCH (attrDesc:ANNOTATION)-[:HAS_JS_VALIDATION]->(jsValidation:ANNOTATION)-[:INSTANCE_OF]->(:ANNOTATION_TYPE { name: \"JSValidation\" }) WHERE elementId(attrDesc) = \"%s\" RETURN jsValidation", nodeId));
             if (!results.isEmpty()) {
@@ -80,9 +93,10 @@ public class AttributeDescModel extends AnnotationModel {
                 JSValidation jsValidation = JSValidation.nodeToModel(jsValidationNode);
                 model.jsValidation = jsValidation.generate();
                 model.imports.addAll(jsValidation.getImports());
-            } else {
-                model.jsValidation = "@JSValidation()";
             }
+//            else {
+//                model.jsValidation = "@JSValidation()";
+//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -146,4 +160,5 @@ public class AttributeDescModel extends AnnotationModel {
     public String getJsValidation() {
         return jsValidation;
     }
+
 }

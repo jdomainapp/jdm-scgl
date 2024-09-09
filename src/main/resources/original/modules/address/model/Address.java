@@ -53,7 +53,7 @@ public class Address implements Subscriber, Publisher {
 
     @DAttr(name = "student", type = Type.Domain, serialisable = false)
     @DAssoc(ascName = "student-has-city", role = "city",
-            ascType = AssocType.One2One, endType = AssocEndType.One,
+                ascType = AssocType.One2One, endType = AssocEndType.One,
             associate = @Associate(type = Student.class, cardMin = 1, cardMax = 1, determinant = true))
     @JsonIgnoreProperties({"address"})
     @JsonDeserialize(using = Deserializers.StudDeserializer.class)

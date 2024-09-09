@@ -16,7 +16,8 @@ public class ModuleDescriptorModel extends AnnotationModel {
         "jda.modules.mccl.syntax.view.ViewDesc",
         "jda.modules.mccl.syntax.controller.ControllerDesc",
         "jda.modules.mccl.syntax.SetUpDesc",
-        "jda.modules.mccl.conceptmodel.module.ModuleType"
+        "jda.modules.mccl.conceptmodel.module.ModuleType",
+        "jda.modules.mccl.syntax.containment.CTree"
     });
 
     private String name;
@@ -27,6 +28,7 @@ public class ModuleDescriptorModel extends AnnotationModel {
     private List<String> subtypes;
     private String type;
     private boolean isPrimary;
+    private String containmentTree;
 
     public static ModuleDescriptorModel nodeToModel(Node node) {
         Map<String, Object> nodeProperties = node.asMap();
@@ -88,6 +90,15 @@ public class ModuleDescriptorModel extends AnnotationModel {
                 model.subtypes.add(subtypeName);
                 model.imports.add(basePackage + "." + subtypePackage + "." + subtypeName);
             });
+
+            // ctree
+            List<Record> ctreeRecords = KnowledgeGraph.query(String.format("MATCH (n:ANNOTATION)-[:HAS_CONTAINMENT_TREE]->(ctree:ANNOTATION) WHERE ID(n)=%s RETURN ctree", node.id()));
+            if (!ctreeRecords.isEmpty()) {
+                Node ctreeNode = ctreeRecords.get(0).get("ctree").asNode();
+                CTreeModel ctreeModel = CTreeModel.nodeToModel(ctreeNode);
+                model.imports.addAll(ctreeModel.getImports());
+                model.containmentTree = ctreeModel.generate();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -130,5 +141,9 @@ public class ModuleDescriptorModel extends AnnotationModel {
 
     public boolean getIsPrimary() {
         return isPrimary;
+    }
+
+    public String getContainmentTree() {
+        return containmentTree;
     }
 }

@@ -8,5 +8,7 @@
         ${subtypes?map(type -> type + ".class")?join(",\n\t\t")}
     },
     type = ${type},
-    isPrimary = ${isPrimary?c}
+    isPrimary = ${isPrimary?c},
+    modelDesc = ${modelDesc}
+    <#if containmentTree??>, containmentTree = ${containmentTree}</#if>
 )

@@ -1,2 +1,1 @@
-    ${attributeDesc!""}
-    ${accessModifier!"private"} ${dataType} ${name};
+@DClass(schema="${schema}")

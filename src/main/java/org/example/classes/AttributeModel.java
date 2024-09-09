@@ -5,16 +5,14 @@ import freemarker.template.TemplateException;
 import org.example.Freemarker;
 import org.example.KnowledgeGraph;
 import org.example.Utils;
+import org.example.annotations.AnnotationModel;
 import org.example.annotations.AttributeDescModel;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.types.Node;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class AttributeModel {
     private String attributeDesc;
@@ -22,6 +20,8 @@ public class AttributeModel {
     private String dataType;
     private String name;
     private Set<String> imports;
+
+    private ArrayList<String> annotations;
 
     public AttributeModel(Node node) {
         Map<String, Object> nodeProperties = node.asMap();
@@ -32,15 +32,20 @@ public class AttributeModel {
         imports = new HashSet<>();
         imports.addAll(List.of(Utils.splitIfNotEmpty(nodeProperties.getOrDefault("requiredImport", "").toString())));
 
+        annotations = new ArrayList<>();
+
         try {
-            List<Record> attributeDescs = KnowledgeGraph.query(String.format("MATCH (:ATTRIBUTE { name: \"%s\" })<-[:ATTACH_TO]-(annotation:ANNOTATION)-[:INSTANCE_OF]->(:ANNOTATION_TYPE { name: \"AttributeDesc\" }) RETURN annotation", name));
-            if (attributeDescs.isEmpty()) {
-                attributeDesc = "";
-            } else {
-                Node annotationNode = attributeDescs.get(0).get("annotation").asNode();
-                AttributeDescModel model = AttributeDescModel.nodeToModel(annotationNode);
-                attributeDesc = model.generate();
-                imports.addAll(model.getImports());
+            /* dennis */
+            List<Record> annotationNodes = KnowledgeGraph.query(String.format("MATCH (n:ATTRIBUTE)<-[:ATTACH_TO]-(a:ANNOTATION)-[:INSTANCE_OF]->(aType:ANNOTATION_TYPE) WHERE ID(n)=%s return a, aType.name", node.id()));
+            for (Record r : annotationNodes) {
+                Node annotationNode = r.get("a").asNode();
+                String annotationType = r.get("aType.name").asString();
+                AnnotationModel model = AnnotationModel.nodeToModel(annotationNode, annotationType);
+
+                if (model != null) {
+                    imports.addAll(model.getImports());
+                    annotations.add(model.generate());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,5 +81,9 @@ public class AttributeModel {
 
     public Set<String> getImports() {
         return imports;
+    }
+
+    public ArrayList<String> getAnnotations() {
+        return annotations;
     }
 }

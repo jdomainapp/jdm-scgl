@@ -12,77 +12,90 @@ import java.util.Map;
 
 import static org.example.Constants.basePackage;
 
-public class CTreeModel extends AnnotationModel {
+public class CEdgeModel extends AnnotationModel {
     private static final List<String> defaultImports = List.of(new String[] {
-        "jda.modules.mccl.syntax.containment.CTree",
+        "jda.modules.mccl.syntax.containment.CEdge",
+        "jda.modules.mccl.syntax.containment.ScopeDesc"
     });
 
-    private String root;
-    private String stateScope;
+    private String parent;
+    private String child;
+    private String scopeDesc;
 
-    private ArrayList<String> edgesList;
-
-    public static CTreeModel nodeToModel(Node node) {
+    public static CEdgeModel nodeToModel(Node node) {
         Map<String, Object> nodeProperties = node.asMap();
 
-        CTreeModel model = new CTreeModel();
+        CEdgeModel model = new CEdgeModel();
         model.imports = new HashSet<>(defaultImports);
 
-        // root
+        // parent
         try {
-            List<Record> records = KnowledgeGraph.query(String.format("MATCH (n:ANNOTATION)-[:HAS_ROOT]->(root:CLASS) WHERE ID(n)=%s RETURN root", node.id()));
+            List<Record> records = KnowledgeGraph.query(String.format("MATCH (root:CLASS)<-[:HAS_ROOT]-(:ANNOTATION)-[:HAS_CONTAINMENT_EDGE]->(n:ANNOTATION) WHERE ID(n)=%s RETURN root", node.id()));
             if (!records.isEmpty()) {
                 Node domainClass = records.get(0).get("root").asNode();
                 String domainClassName = domainClass.get("name").asString();
                 String domainClassPackage = domainClass.get("packageName").asString();
 
-                model.root = domainClassName;
+                model.parent = domainClassName;
                 model.imports.add(basePackage + "." + domainClassPackage + "." + domainClassName);
             } else {
-                model.root = "Null";
+                model.parent = "Null";
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
-        model.stateScope = nodeProperties.getOrDefault("stateScope", "").toString();
-
-        // edgelist
-        ArrayList<String> edgesList = new ArrayList<>();
-
+        // child
         try {
-            List<Record> records = KnowledgeGraph.query(String.format("MATCH (n:ANNOTATION)-[:HAS_ROOT]->(root:CLASS) WHERE ID(n)=%s RETURN root", node.id()));
+            List<Record> records = KnowledgeGraph.query(String.format("MATCH (n:ANNOTATION)-[:HAS_CHILD]->(child:CLASS) WHERE ID(n)=%s RETURN child", node.id()));
             if (!records.isEmpty()) {
-                Node domainClass = records.get(0).get("root").asNode();
+                Node domainClass = records.get(0).get("child").asNode();
                 String domainClassName = domainClass.get("name").asString();
                 String domainClassPackage = domainClass.get("packageName").asString();
 
-                model.root = domainClassName;
+                model.child = domainClassName;
                 model.imports.add(basePackage + "." + domainClassPackage + "." + domainClassName);
+            } else {
+                model.child = "Null";
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
-        model.edgesList = edgesList;
+        // scope desc
+        try {
+            String query = String.format("MATCH (n:ANNOTATION)-[:HAS_SCOPE]->(scope:ANNOTATION) WHERE ID(n)=%s RETURN scope", node.id());
+            List<Record> records = KnowledgeGraph.query(query);
+            if (!records.isEmpty()) {
+                Node scopeNode = records.get(0).get("scope").asNode();
+                ScopeDescModel scopeDescModel = ScopeDescModel.nodeToModel(scopeNode);
+
+                if (scopeDescModel != null) {
+                    scopeDescModel.imports.addAll(scopeDescModel.getImports());
+                    model.scopeDesc = scopeDescModel.generate();
+                }
+            }
+        } catch (NullPointerException | IOException e) {
+            e.printStackTrace();
+        }
 
         return model;
     }
 
     @Override
     public String getTemplateName() {
-        return "templates/CTree.ftlh";
+        return "templates/CEdge.ftlh";
     }
 
-    public String getRoot() {
-        return root;
+    public String getParent() {
+        return parent;
     }
 
-    public String getStateScope() {
-        return stateScope;
+    public String getChild() {
+        return child;
     }
 
-    public ArrayList<String> getEdgesList() {
-        return edgesList;
+    public String getScopeDesc() {
+        return scopeDesc;
     }
 }
